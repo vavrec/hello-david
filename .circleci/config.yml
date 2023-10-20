@@ -8,7 +8,11 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh $SSH_USER@$SSH_HOST "mkdir -p /root/data/google"
+            ssh $SSH_USER@$SSH_HOST "pwd"
+      - pwd:
+          name: PWD
+          command: |
+            pwd
 
 workflows:
   build-and-deploy:
