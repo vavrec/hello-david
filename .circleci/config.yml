@@ -25,7 +25,7 @@ jobs:
     steps:
       - checkout
       - clear:
-        name: Clear
+          name: Clear
           command: |
             rm -rf /var/www/html/*
       - run:
