@@ -18,6 +18,9 @@ jobs:
       - run:
           name: Application build
           command: npm run build
+      - run:
+          name: Check the current directory
+          command: pwd && ls -la
 
   deploy:
     machine:
