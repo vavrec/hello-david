@@ -18,15 +18,18 @@ jobs:
       - run:
           name: Application build
           command: npm run build
-      - run:
-          name: Check the current directory
-          command: pwd && ls -la
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build/
 
   deploy:
     machine:
       enabled: true
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Check the current directory
           command: ls -la
