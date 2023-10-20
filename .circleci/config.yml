@@ -19,25 +19,25 @@ jobs:
           name: Application build
           command: npm run build
 
-  # deploy:
-  #   machine:
-  #     enabled: true
-  #   steps:
-  #     - checkout
-  #     - add_ssh_keys:
-  #         fingerprints:
-  #           - "xx:xx:xx:xx:xx:..." # Nahraďte otazníky skutečným otiskem vašeho klíče
-  #     - run:
-  #         name: Deploy na server
-  #         command: |
-  #           scp -r build/* user@your_server_ip:/path/to/your/app/directory
-  #           ssh user@your_server_ip 'cd /path/to/your/app/directory && other_commands_if_needed'
+  deploy:
+    machine:
+      enabled: true
+    steps:
+      - checkout
+      - clear:
+        name: Clear
+          command: |
+            rm -rf /var/www/html/*
+      - run:
+          name: Deploy
+          command: |
+            scp -r build/* $SSH_USER@$SSH_HOST:/var/www/html
 
 workflows:
   version: 2
   build-and-deploy:
     jobs:
       - build
-      # - deploy:
-      #     requires:
-      #       - build
+      - deploy:
+          requires:
+            - build
