@@ -1,23 +1,43 @@
 version: 2.1
 
 jobs:
-  deploy:
-    machine:
-      image: ubuntu-2204:2023.07.2
+  build:
+    docker:
+      - image: circleci/node:16
     steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: Deploy Over SSH
-          command: |
-            ssh $SSH_USER@$SSH_HOST "pwd"
-      - pwd:
-          name: PWD
-          command: |
-            pwd
+          name: Install dependency
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: Application build
+          command: npm run build
+
+  # deploy:
+  #   machine:
+  #     enabled: true
+  #   steps:
+  #     - checkout
+  #     - add_ssh_keys:
+  #         fingerprints:
+  #           - "xx:xx:xx:xx:xx:..." # Nahraďte otazníky skutečným otiskem vašeho klíče
+  #     - run:
+  #         name: Deploy na server
+  #         command: |
+  #           scp -r build/* user@your_server_ip:/path/to/your/app/directory
+  #           ssh user@your_server_ip 'cd /path/to/your/app/directory && other_commands_if_needed'
 
 workflows:
+  version: 2
   build-and-deploy:
     jobs:
-      - deploy:
-          filters:
-            branches:
-              only: main 
+      - build
+      # - deploy:
+      #     requires:
+      #       - build
