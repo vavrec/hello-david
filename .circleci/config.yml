@@ -24,7 +24,7 @@ jobs:
       enabled: true
     steps:
       - checkout
-      - clear:
+      - run:
           name: Clear
           command: |
             ssh $SSH_USER@$SSH_HOST "rm -rf /var/www/html/*"
